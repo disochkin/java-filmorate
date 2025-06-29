@@ -15,10 +15,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final Map<Long, Film> films = new HashMap<>();
-
     static final Logger log =
             LoggerFactory.getLogger(FilmController.class);
+    private final Map<Long, Film> films = new HashMap<>();
 
     @GetMapping
     @RequestMapping("/")
@@ -89,4 +88,5 @@ public class FilmController {
             log.debug("Ошибка валидации запроса на обновление фильма: {}", e.toString());
         }
         return film;
-    }}
+    }
+}
