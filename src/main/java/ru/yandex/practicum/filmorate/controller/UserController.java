@@ -18,9 +18,10 @@ import java.util.Map;
 @RequestMapping("/users")
 
 public class UserController {
-    private final Map<Long, User> users = new HashMap<>();
     static final Logger log =
             LoggerFactory.getLogger(UserController.class);
+    private final Map<Long, User> users = new HashMap<>();
+
     @GetMapping
     @RequestMapping("/")
     public Collection<User> findAll() {
