@@ -1,13 +1,13 @@
-package models;
+package ru.yandex.practicum.filmorate;
 
+import jakarta.validation.ConstraintViolation;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
-
 import java.time.LocalDate;
+import java.util.Set;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class UserTest {
+public class UserModelTest {
     User user;
     @Test
     void userModelCommonTest() {
@@ -18,6 +18,5 @@ public class UserTest {
         assertEquals("user-login", user.getLogin());
         assertEquals("user-name", user.getName());
     }
-
 
 }
