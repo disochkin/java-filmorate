@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NonNull;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.time.LocalDate;
+
 @Data
 public class Film {
     private Long id;
@@ -13,7 +14,7 @@ public class Film {
     private String name;
     private String description;
     @NonNull
-    private Instant releaseDate;
+    private LocalDate releaseDate;
     @NonNull
     private Duration duration;
 }
