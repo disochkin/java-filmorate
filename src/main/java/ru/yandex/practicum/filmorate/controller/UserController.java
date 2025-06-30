@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -22,8 +25,7 @@ public class UserController {
             LoggerFactory.getLogger(UserController.class);
     private final Map<Long, User> users = new HashMap<>();
 
-    @GetMapping
-    @RequestMapping("/")
+    @RequestMapping(path = "", method = RequestMethod.GET)
     public Collection<User> findAll() {
         return users.values();
     }
@@ -75,34 +77,33 @@ public class UserController {
         }
     }
 
-    @PostMapping
-    @RequestMapping("/create")
-    public User create(@Valid @RequestBody User user) {
+    @RequestMapping(path = "", method = RequestMethod.POST)
+    public ResponseEntity<User> create(@Valid @RequestBody User user) {
         try {
             validateUserBeforeCreate(user);
             if (user.getName() == null || user.getName().trim().isEmpty()) {
                 user.setName(user.getLogin());
             }
+            user.setId(getNextId());
+            users.put(user.getId(), user);
+            log.info("Пользователь успешно создан {}", user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             log.debug("Ошибка создания пользователя", e.toString());
+            return new ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        user.setId(getNextId());
-        users.put(user.getId(), user);
-        log.info("Пользователь успешно создан {}", user);
-        return user;
     }
 
-    @PutMapping
-    @RequestMapping("/update")
-    public ResponseEntity<String> update(@Valid @RequestBody User user) {
+    @RequestMapping(path = "", method = RequestMethod.PUT)
+    public ResponseEntity<User> update(@Valid @RequestBody User user) {
         try {
             validateUserBeforeCreate(user);
             users.put(user.getId(), user);
             log.info("Пользователь успешно обновлен {}", user);
-            return new ResponseEntity<>("Данные пользователя обновлены " + user, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             log.debug("Ошибка обновления пользователя", e.toString());
-            return new ResponseEntity<>("Ошибка обновления пользователя " + user, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

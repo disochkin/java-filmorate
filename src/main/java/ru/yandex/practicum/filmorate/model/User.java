@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 public class User {
     private Long id;
-    @Email(message = "Email should be valid")
+    @Email
     private String email;
     @NotBlank
     private String login;
