@@ -22,7 +22,7 @@ public class FilmController {
     private final Map<Long, Film> films = new HashMap<>();
 
     @GetMapping
-    @RequestMapping(path = "",  method = RequestMethod.GET)
+    @RequestMapping(path = "", method = RequestMethod.GET)
     public Collection<Film> findAll() {
         log.info("Запрос на выгрузку всех фильмов. Выгружено: {} записей", films.size());
         return films.values();
@@ -88,4 +88,5 @@ public class FilmController {
             log.debug("Ошибка валидации запроса на обновление фильма: {}", e.toString());
             return new ResponseEntity<>(film, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }}
+    }
+}
