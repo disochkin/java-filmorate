@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -53,7 +52,7 @@ public class UserService {
             throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
         }
         if (friend == null) {
-            throw new FriendNotFoundException("Друг с ID=" + friendId + " не найден");
+            throw new NoSuchElementException("Друг с ID=" + friendId + " не найден");
         }
         currentUser.getFriends().add(friendId);
         friend.getFriends().add(userId);
@@ -80,11 +79,11 @@ public class UserService {
             throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
         }
         if (!currentUser.getFriends().contains(friendId)) {
-            throw new FriendNotFoundException(String.format("В списке друзей пользователя ID=%s " +
+            throw new NoSuchElementException(String.format("В списке друзей пользователя ID=%s " +
                     "не найден друг с ID=%s", userId, friendId));
         }
         if (!friend.getFriends().contains(userId)) {
-            throw new FriendNotFoundException(String.format("В списке друзей пользователя ID=%s " +
+            throw new NoSuchElementException(String.format("В списке друзей пользователя ID=%s " +
                     "не найден друг с ID=%s", friendId, userId));
         }
         currentUser.getFriends().remove(friendId);

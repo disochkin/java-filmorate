@@ -23,6 +23,6 @@ public class ErrorHandler {
 
     @ExceptionHandler(FriendNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleFriendNotFoundException(FriendNotFoundException ex) {
-        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 }
