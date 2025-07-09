@@ -55,7 +55,6 @@ public class FilmService {
         if (film == null) {
             throw new NoSuchElementException("Фильм с ID=" + id + " не найден");
         }
-
         User user = userStorage.getUserById(userId);
         if (user == null) {
             throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");

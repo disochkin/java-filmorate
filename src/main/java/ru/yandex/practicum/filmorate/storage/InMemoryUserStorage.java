@@ -6,7 +6,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -21,12 +20,6 @@ public class InMemoryUserStorage implements UserStorage {
         return ++currentMaxId;
     }
 
-    private void validateUser(User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new NoSuchElementException("Указан id несуществующего пользователя");
-        }
-    }
-
     public User create(User user) {
         user.setId(getNextId());
         users.put(user.getId(), user);
@@ -38,14 +31,10 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public User getUserById(Long userId) {
-        if (!users.containsKey(userId)) {
-            throw new NoSuchElementException("Указан id несуществующего пользователя");
-        }
         return users.get(userId);
     }
 
     public User update(User user) {
-        validateUser(user);
         users.put(user.getId(), user);
         return user;
     }

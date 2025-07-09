@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
@@ -28,15 +27,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     public Film update(Film newFilm) {
-        checkIdFilmExist(newFilm.getId());
         films.put(newFilm.getId(), newFilm);
         return newFilm;
-    }
-
-    private void checkIdFilmExist(Long id) {
-        if (!films.containsKey(id)) {
-            throw new ValidationException(String.format("Указан id несуществующего фильма: %s", id));
-        }
     }
 
     private long getNextId() {
