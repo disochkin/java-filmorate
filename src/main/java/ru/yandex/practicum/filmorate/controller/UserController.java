@@ -4,10 +4,8 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -34,6 +32,11 @@ public class UserController {
         return userService.findAll();
     }
 
+    @RequestMapping(path = "/{userId}", method = RequestMethod.GET)
+    public User getUserById(@PathVariable long userId) {
+        return userService.getUserById(userId);
+    }
+
     @RequestMapping(path = "", method = RequestMethod.POST)
     public User create(@Valid @RequestBody User user) {
         return userService.create(user);
@@ -43,4 +46,25 @@ public class UserController {
     public User update(@Valid @RequestBody User user) {
         return userService.update(user);
     }
+
+    @RequestMapping(path = "/{id}/friends/{friendId}", method = RequestMethod.PUT)
+    public User addFriend(@PathVariable long id, @PathVariable long friendId) {
+        return userService.addFriend(id, friendId);
+    }
+
+    @RequestMapping(path = "/{id}/friends", method = RequestMethod.GET)
+    public Collection<User> getFriends(@PathVariable long id) {
+        return userService.getFriends(id);
+    }
+
+    @RequestMapping(path = "/{id}/friends/{friendId}", method = RequestMethod.DELETE)
+    public User getFriends(@PathVariable long id, @PathVariable long friendId) {
+        return userService.removeFriend(id, friendId);
+    }
+
+    @RequestMapping(path = "/{id}/friends/common/{otherId}", method = RequestMethod.GET)
+    public Collection<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
+
 }

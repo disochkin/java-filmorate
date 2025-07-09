@@ -2,12 +2,20 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.annotation.MinReleaseDate;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
+@NoArgsConstructor // Generates a no-argument constructor
+@AllArgsConstructor
 @Data
+@Builder
 public class Film {
     private Long id;
     @NotBlank(message = "Название фильма не должно быть пустым")
@@ -22,8 +30,9 @@ public class Film {
     @NotNull
     @Positive
     private int duration;
+    @Builder.Default
+    private Set<Long> likes = new HashSet<>();
 
-    public Film() {
-
-    }
+//    public Film() {
+//    }
 }

@@ -1,16 +1,12 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -25,9 +21,9 @@ public class InMemoryUserStorage implements UserStorage {
         return ++currentMaxId;
     }
 
-    private void validateUserBeforeUpdate(User user) {
+    private void validateUser(User user) {
         if (!users.containsKey(user.getId())) {
-            throw new ValidationException("Указан id несуществующего пользователя");
+            throw new NoSuchElementException("Указан id несуществующего пользователя");
         }
     }
 
@@ -41,8 +37,15 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values();
     }
 
+    public User getUserById(Long userId) {
+        if (!users.containsKey(userId)) {
+            throw new NoSuchElementException("Указан id несуществующего пользователя");
+        }
+        return users.get(userId);
+    }
+
     public User update(User user) {
-        validateUserBeforeUpdate(user);
+        validateUser(user);
         users.put(user.getId(), user);
         return user;
     }
