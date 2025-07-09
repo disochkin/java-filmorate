@@ -75,9 +75,12 @@ public class UserService {
 
     public User removeFriend(Long userId, Long friendId) {
         User currentUser = userStorage.getUserById(userId);
-        User friend = userStorage.getUserById(friendId);
         if (currentUser == null) {
             throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
+        }
+        User friend = userStorage.getUserById(friendId);
+        if (friend == null) {
+            throw new NoSuchElementException("Пользователь с ID=" + friendId + " не найден");
         }
         if (!currentUser.getFriends().contains(friendId)) {
             throw new FriendNotFoundException(String.format("В списке друзей пользователя ID=%s " +
