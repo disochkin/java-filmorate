@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/films")
@@ -17,6 +16,7 @@ public class FilmController {
     static final Logger log =
             LoggerFactory.getLogger(FilmController.class);
     FilmService filmService;
+
     @Autowired
     private FilmController(FilmService filmService) {
         this.filmService = filmService;

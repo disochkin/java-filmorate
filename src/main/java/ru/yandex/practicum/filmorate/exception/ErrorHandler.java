@@ -12,22 +12,22 @@ import java.util.NoSuchElementException;
 public class ErrorHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Map<String,String>> handleResourceNotFoundException(NoSuchElementException ex) {
-        return new ResponseEntity<>(Map.of("error",ex.getMessage()), HttpStatus.NOT_FOUND);
+    public ResponseEntity<Map<String, String>> handleResourceNotFoundException(NoSuchElementException ex) {
+        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String,String>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return new ResponseEntity<>(Map.of("error",ex.getMessage()), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<Map<String,String>> handleIllegalArgumentException(ValidationException ex) {
-        return new ResponseEntity<>(Map.of("error",ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(ValidationException ex) {
+        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(FriendNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handleFriendNotFoundException(FriendNotFoundException ex) {
-        return new ResponseEntity<>(Map.of("error",ex.getMessage()), HttpStatus.OK);
+    public ResponseEntity<Map<String, String>> handleFriendNotFoundException(FriendNotFoundException ex) {
+        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.OK);
     }
 }
