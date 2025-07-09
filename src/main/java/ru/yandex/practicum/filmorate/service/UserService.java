@@ -53,7 +53,7 @@ public class UserService {
             throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
         }
         if (friend == null) {
-            throw new NoSuchElementException("Друг с ID=" + friendId + " не найден");
+            throw new FriendNotFoundException("Друг с ID=" + friendId + " не найден");
         }
         currentUser.getFriends().add(friendId);
         friend.getFriends().add(userId);
