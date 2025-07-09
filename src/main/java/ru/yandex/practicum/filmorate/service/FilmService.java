@@ -43,6 +43,10 @@ public class FilmService {
     }
 
     public Film update(Film film) {
+        Film filmInStorage = filmStorage.getFilmById(film.getId());
+        if (filmInStorage == null) {
+            throw new NoSuchElementException("Фильм с ID=" + film.getId() + " не найден");
+        }
         return filmStorage.update(film);
     }
 
