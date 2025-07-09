@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -30,10 +29,9 @@ public class FilmService {
     }
 
     public Collection<Film> getPopularFilm(Integer count) {
-        List<Film> sortedProducts = filmStorage.findAll().stream()
+        return filmStorage.findAll().stream()
                 .sorted(Comparator.comparingInt(film -> film.getLikes().size())).limit(count)
-                .toList();
-        return sortedProducts;
+                .toList().reversed();
     }
 
     public Film getFilmById(Long filmId) {

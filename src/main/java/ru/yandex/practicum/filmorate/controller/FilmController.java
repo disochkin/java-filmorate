@@ -29,7 +29,7 @@ public class FilmController {
         return filmService.findAll();
     }
 
-    @RequestMapping(path = "/popular?count={count}", method = RequestMethod.GET)
+    @RequestMapping(path = "/popular", method = RequestMethod.GET)
     public Collection<Film> getPopularFilm(@RequestParam(defaultValue = "10") int count) {
         //log.info("Запрос на выгрузку всех фильмов. Выгружено: {} записей", films.size());
         return filmService.getPopularFilm(count);
