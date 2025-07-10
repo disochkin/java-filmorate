@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -12,7 +13,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/users")
-
+@Validated
 public class UserController {
     static final Logger log =
             LoggerFactory.getLogger(UserController.class);

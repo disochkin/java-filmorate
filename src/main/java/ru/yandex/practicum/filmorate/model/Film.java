@@ -17,6 +17,7 @@ import java.util.Set;
 @Data
 @Builder
 public class Film {
+    @Positive(message = "ID фильма не может быть пустым")
     private Long id;
     @NotBlank(message = "Название фильма не должно быть пустым")
     private String name;
@@ -32,7 +33,4 @@ public class Film {
     private int duration;
     @Builder.Default
     private Set<Long> likes = new HashSet<>();
-
-//    public Film() {
-//    }
 }
