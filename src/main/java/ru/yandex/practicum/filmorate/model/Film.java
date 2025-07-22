@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.annotation.MinReleaseDate;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor // Generates a no-argument constructor
@@ -31,6 +33,10 @@ public class Film {
     @NotNull
     @Positive
     private int duration;
+    @NotNull
+    private Set<Genre> genre = new HashSet<>();
+    @NotNull
+    private MpaRating mpaRating;
     @Builder.Default
     private Set<Long> likes = new HashSet<>();
 }
