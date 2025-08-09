@@ -18,7 +18,7 @@ import java.util.Set;
 @Builder
 public class User {
     @Positive
-    private Long id;
+    private Integer id;
     @NotNull(message = "Email не может быть пустым")
     @Email(message = "Некорректный формат email")
     private String email;

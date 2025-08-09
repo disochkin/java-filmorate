@@ -9,15 +9,16 @@ import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.annotation.MinReleaseDate;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor // Generates a no-argument constructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Film {
+public class FilmDbRowEntity {
     @Positive(message = "ID фильма не может быть пустым")
-    private Integer id;
+    private Long id;
     @NotBlank(message = "Название фильма не должно быть пустым")
     private String name;
     @Size(max = 200, message = "Описание фильма не должно превышать 200 символов")
@@ -31,6 +32,6 @@ public class Film {
     @Positive
     private int duration;
     @Builder.Default
-    private Set<Genres> genres = new HashSet<>();;
+    private List<Genres> genres = new ArrayList<>();
     private Mpa mpa;
 }

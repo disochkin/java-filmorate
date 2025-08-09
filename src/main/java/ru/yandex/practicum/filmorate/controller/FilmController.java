@@ -1,4 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,18 +32,17 @@ public class FilmController {
     }
 
     @RequestMapping(path = "/popular", method = RequestMethod.GET)
-    public Collection<Film> getPopularFilm(@RequestParam(defaultValue = "10") int count) {
+    public Collection<Film> getPopularFilm(@RequestParam(defaultValue = "10") int limit) {
         log.info("Запрос на выгрузку популярных фильмов.");
-        return filmService.getPopularFilm(count);
+        return filmService.getPopularFilm(limit);
     }
 
 
     @RequestMapping(path = "/{filmId}", method = RequestMethod.GET)
-    public Film getFilmById(@PathVariable long filmId) {
-        log.info(String.format("Запрос на выгрузку фильма с id=%s.", filmId));
+    public Film getFilmById(@PathVariable Integer filmId) {
+        log.info("Запрос на выгрузку фильма с id={}.", filmId);
         return filmService.getFilmById(filmId);
     }
-
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Film create(@Valid @RequestBody Film film) {
         log.info("Запрос на создание нового фильма.");
@@ -49,19 +50,19 @@ public class FilmController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT)
-    public Film update(@RequestBody Film film) {
+    public Film update(@Valid @RequestBody Film film) {
         log.info("Запрос на обновление фильма.");
         return filmService.update(film);
     }
 
-    @RequestMapping(value = "/{id}/like/{userId}", method = RequestMethod.PUT)
-    public Film addLike(@PathVariable long id, @PathVariable long userId) {
-        return filmService.addLike(id, userId);
+    @RequestMapping(value = "/{filmId}/like/{userId}", method = RequestMethod.PUT)
+    public String addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+        return filmService.addLike(filmId, userId);
     }
 
-    @RequestMapping(value = "/{id}/like/{userId}", method = RequestMethod.DELETE)
-    public Film removeLike(@PathVariable long id, @PathVariable long userId) {
-        return filmService.removeLike(id, userId);
+    @RequestMapping(value = "/{filmId}/like/{userId}", method = RequestMethod.DELETE)
+    public String removeLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+        return filmService.removeLike(filmId, userId);
     }
 
 }

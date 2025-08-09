@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -44,6 +46,13 @@ public class ErrorHandler {
         log.error(ex.getMessage());
         return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.OK);
     }
+
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    @ExceptionHandler()
+//    @ResponseBody
+//    public String handleDatabaseErrors(RuntimeException ex) {
+//        return "Возникла внутренняя ошибка сервера при сохранении данных.";
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handle(Exception ex) {

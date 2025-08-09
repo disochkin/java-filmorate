@@ -1,20 +1,25 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-@Component
+@Component("InMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
-    private final Map<Long, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
-    private long getNextId() {
-        long currentMaxId = users.keySet()
+    private Integer getNextId() {
+        Integer currentMaxId = users.keySet()
                 .stream()
-                .mapToLong(id -> id)
+                .mapToInt(id -> id)
                 .max()
                 .orElse(0);
         return ++currentMaxId;
@@ -30,8 +35,13 @@ public class InMemoryUserStorage implements UserStorage {
         return users.values();
     }
 
-    public User getUserById(Long userId) {
-        return users.get(userId);
+    public Optional<User> getUserById(Long userId) {
+        try {
+            return Optional.ofNullable(users.get(userId));
+        } catch (EmptyResultDataAccessException e) {
+            // Нет такого пользователя, вернем пустое Optional
+            return Optional.empty();
+        }
     }
 
     public User update(User user) {

@@ -2,16 +2,21 @@ package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmDbRowEntity;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public interface FilmStorage {
-    Film create(Film film);
-
+    Film save(Film film);
+//
     Collection<Film> findAll();
 
-    Film getFilmById(Long filmId);
-
-    Film update(Film film);
+    Collection<Mpa> findAllMpa();
+//
+//    Optional<Film> getFilmById(Long filmId);
+//
+//    Film update(Film film);
 }
