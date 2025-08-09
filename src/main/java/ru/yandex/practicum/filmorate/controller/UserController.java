@@ -4,11 +4,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.*;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
 
@@ -18,7 +17,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class UserController {
     static final Logger log =
-        LoggerFactory.getLogger(UserController.class);
+            LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 

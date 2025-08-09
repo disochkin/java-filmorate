@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.Genres;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -21,7 +20,7 @@ public class JdbcUserRepository {
     private final NamedParameterJdbcOperations jdbc;
     private final RowMapper<User> mapper;
 
-//    public JdbcGenreRepository(NamedParameterJdbcOperations jdbc) {
+    //    public JdbcGenreRepository(NamedParameterJdbcOperations jdbc) {
 //        this.jdbc = jdbc;
 //        this.mapper = (rs, rowNum) -> new Genres(rs.getInt("id"), rs.getString("name")); // Конструктор для удобства
 //    }
@@ -33,10 +32,11 @@ public class JdbcUserRepository {
                 .addValue("login", user.getLogin())
                 .addValue("birthday", user.getBirthday());
         jdbc.update("INSERT INTO PUBLIC.\"USERS\" (EMAIL, NAME, LOGIN, BIRTHDAY) " +
-                "VALUES (:email, :name, :login, :birthday)", params,  keyHolder, new String[]{"id"});
+                "VALUES (:email, :name, :login, :birthday)", params, keyHolder, new String[]{"id"});
         user.setId(keyHolder.getKeyAs(Integer.class));
         return user;
     }
+
     public User update(User user) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", user.getId())
@@ -90,7 +90,7 @@ public class JdbcUserRepository {
 
     public void removeFriendship(Integer userId, Integer friendId) {
         String query = "DELETE FROM PUBLIC.\"FRIENDSHIP\" f " +
-                        "WHERE (f.USER_ID = :userId AND f.FRIEND_ID = :friendId);";
+                "WHERE (f.USER_ID = :userId AND f.FRIEND_ID = :friendId);";
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("userId", userId);
         parameters.addValue("friendId", friendId);

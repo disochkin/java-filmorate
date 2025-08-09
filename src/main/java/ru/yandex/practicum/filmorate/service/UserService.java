@@ -59,7 +59,7 @@ public class UserService {
     public List<User> getFriends(Integer userId) {
         final User currentUser = jdbcUserRepository.getUserById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
-        return  jdbcUserRepository.getFriends(userId).stream()
+        return jdbcUserRepository.getFriends(userId).stream()
                 .map(friendId -> {
                     Optional<User> userOpt = jdbcUserRepository.getUserById(friendId);
                     return userOpt.orElseThrow(() -> new FriendNotFoundException("Дружба с несуществующим пользователем id=" + userId));
@@ -96,7 +96,7 @@ public class UserService {
         Set<Integer> commonFriends = new HashSet<>(jdbcUserRepository.getFriends(userId));
         commonFriends.retainAll(jdbcUserRepository.getFriends(otherId));
         return commonFriends.stream()
-                .map(friendId  -> {
+                .map(friendId -> {
                     Optional<User> userOpt = jdbcUserRepository.getUserById(friendId);
                     return userOpt.orElseThrow(() -> new FriendNotFoundException("Дружба с несуществующим пользователем id=" + friendId));
                 })

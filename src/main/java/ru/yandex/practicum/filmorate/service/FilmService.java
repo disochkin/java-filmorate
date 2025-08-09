@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.*;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genres;
+import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.JdbcFilmRepository;
 import ru.yandex.practicum.filmorate.storage.JdbcGenreRepository;
 import ru.yandex.practicum.filmorate.storage.JdbcUserRepository;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
     private final JdbcFilmRepository jdbcFilmRepository;
-//    private final MpaDbStorage mpaDbStorage;
+    //    private final MpaDbStorage mpaDbStorage;
     private final JdbcGenreRepository jdbcGenreRepository;
     private final JdbcUserRepository jdbcUserRepository;
     // private final UserStorage userStorage;
@@ -27,12 +28,12 @@ public class FilmService {
 //        this.jdbcFilmRepository = jdbcFilmRepository;
 //        this.jdbcGenreRepository = jdbcGenreRepository;
 
-        //     this.userStorage = userStorage;
+    //     this.userStorage = userStorage;
 
     public Film create(Film film) {
         final List<Integer> genreIds = film.getGenres().stream().map(Genres::getId).toList();
         final Collection<Genres> genres = jdbcGenreRepository.getGenresByIds(genreIds);
-        if (genreIds.size() != genres.size()){
+        if (genreIds.size() != genres.size()) {
             throw new NoSuchElementException("Жанры не найдены");
         }
         final Optional<Mpa> mpaOptional = jdbcFilmRepository.getMpaById(film.getMpa().getId());
@@ -47,7 +48,7 @@ public class FilmService {
         Film filmInStorage = getFilmById(film.getId());
         final List<Integer> genreIds = film.getGenres().stream().map(Genres::getId).toList();
         final Collection<Genres> genres = jdbcGenreRepository.getGenresByIds(genreIds);
-        if (genreIds.size() != genres.size()){
+        if (genreIds.size() != genres.size()) {
             throw new NoSuchElementException("Жанры не найдены");
         }
         final Optional<Mpa> mpaOptional = jdbcFilmRepository.getMpaById(film.getMpa().getId());
@@ -61,7 +62,7 @@ public class FilmService {
         filmInStorage.setMpa(film.getMpa());
         filmInStorage.setGenres(film.getGenres());
         return jdbcFilmRepository.update(film);
-        }
+    }
 
     public Collection<Film> findAll() {
         return jdbcFilmRepository.findAll();
@@ -77,7 +78,7 @@ public class FilmService {
     }
 
     public Collection<Film> getPopularFilm(Integer count) {
-        return  jdbcFilmRepository.findAll().stream()
+        return jdbcFilmRepository.findAll().stream()
                 .map(film -> {                            // Для каждого фильма создаем мапу id->film
                     int likesCount = jdbcFilmRepository.getLikes(film.getId()).size();   // Количество лайков
                     return new AbstractMap.SimpleEntry<>(film.getId(), new Object[]{film, likesCount});
@@ -89,7 +90,7 @@ public class FilmService {
     }
 
     public Film getFilmById(Integer id) {
-        final Optional <Film> filmOptional = jdbcFilmRepository.getFilmById(id);
+        final Optional<Film> filmOptional = jdbcFilmRepository.getFilmById(id);
         return filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + id + " не найден"));
     }
 
@@ -111,7 +112,8 @@ public class FilmService {
         return "лайк удален";
 
 
-    }}
+    }
+}
 //
 //        User user = userStorage.getUserById(userId);
 //        if (user == null) {

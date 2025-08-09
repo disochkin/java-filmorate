@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +42,7 @@ public class FilmController {
         log.info("Запрос на выгрузку фильма с id={}.", filmId);
         return filmService.getFilmById(filmId);
     }
+
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Film create(@Valid @RequestBody Film film) {
         log.info("Запрос на создание нового фильма.");
