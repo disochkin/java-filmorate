@@ -17,18 +17,8 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
     private final JdbcFilmRepository jdbcFilmRepository;
-    //    private final MpaDbStorage mpaDbStorage;
     private final JdbcGenreRepository jdbcGenreRepository;
     private final JdbcUserRepository jdbcUserRepository;
-    // private final UserStorage userStorage;
-
-    //public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
-//    public FilmService(@Qualifier("JdbcFilmRepository") JdbcFilmRepository jdbcFilmRepository,
-//                       JdbcGenreRepository jdbcGenreRepository, ) {
-//        this.jdbcFilmRepository = jdbcFilmRepository;
-//        this.jdbcGenreRepository = jdbcGenreRepository;
-
-    //     this.userStorage = userStorage;
 
     public Film create(Film film) {
         final List<Integer> genreIds = film.getGenres().stream().map(Genres::getId).toList();
@@ -61,7 +51,8 @@ public class FilmService {
         filmInStorage.setDuration(film.getDuration());
         filmInStorage.setMpa(film.getMpa());
         filmInStorage.setGenres(film.getGenres());
-        return jdbcFilmRepository.update(film);
+        jdbcFilmRepository.update(film);
+        return getFilmById(film.getId());
     }
 
     public Collection<Film> findAll() {
@@ -110,17 +101,6 @@ public class FilmService {
         userOptional.orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
         jdbcFilmRepository.removeLike(filmId, userId);
         return "лайк удален";
-
-
     }
 }
-//
-//        User user = userStorage.getUserById(userId);
-//        if (user == null) {
-//            throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
-//        }
-//        film.getLikes().remove(userId);
-//        filmStorage.update(film);
-//        return film;
-//    }
 

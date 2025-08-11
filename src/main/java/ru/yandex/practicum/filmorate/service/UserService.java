@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.FriendNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.JdbcUserRepository;
 
@@ -51,9 +52,15 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
         final User friend = jdbcUserRepository.getUserById(friendId)
                 .orElseThrow(() -> new NoSuchElementException("Друг с ID=" + friendId + " не найден"));
-
-        jdbcUserRepository.addFriend(userId, friendId);
-        return currentUser;
+        if (Objects.equals(userId, friendId)) {
+            throw new ValidationException("Ошибка. id пользователя и друга совпадают");
+        }
+        if (currentUser.getFriends().contains(friendId)) {
+            throw new ValidationException(String.format("Ошибка. Друзей пользователя id=%s уже есть друг с id=%s",
+                    userId, friendId));
+        }
+        return jdbcUserRepository.addFriend(userId, friendId)
+                .orElseThrow(() -> new InternalError("Ошибка при добавлении друга"));
     }
 
     public List<User> getFriends(Integer userId) {
@@ -72,18 +79,16 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
 
         final User friend = jdbcUserRepository.getUserById(friendId)
-                .orElseThrow(() -> new NoSuchElementException("Друг с ID=" + friendId + " не найден"));
+                .orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + friendId + " не найден"));
 
         if (!jdbcUserRepository.getFriends(userId).contains(friendId)) {
             throw new FriendNotFoundException(String.format("В списке друзей пользователя ID=%s " +
                     "не найден друг с ID=%s", userId, friendId));
         }
-        if (!jdbcUserRepository.getFriends(friendId).contains(userId)) {
-            throw new FriendNotFoundException(String.format("В списке друзей пользователя ID=%s " +
-                    "не найден друг с ID=%s", friendId, userId));
-        }
+
         jdbcUserRepository.removeFriendship(userId, friendId);
-        return currentUser;
+        return jdbcUserRepository.getUserById(userId)
+                .orElseThrow(() -> new InternalError("Ошибка при удалении дружбы"));
     }
 
     public Collection<User> getCommonFriends(Integer userId, Integer otherId) {
@@ -102,5 +107,4 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
     }
-
 }

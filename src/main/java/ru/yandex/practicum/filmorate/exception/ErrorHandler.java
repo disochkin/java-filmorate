@@ -47,16 +47,16 @@ public class ErrorHandler {
         return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.OK);
     }
 
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    @ExceptionHandler()
-//    @ResponseBody
-//    public String handleDatabaseErrors(RuntimeException ex) {
-//        return "Возникла внутренняя ошибка сервера при сохранении данных.";
-//    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handle(Exception ex) {
         log.error(ex.getMessage());
         return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(InternalError.class)
+    public ResponseEntity<Map<String, String>> handleInternalError(Exception ex) {
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(Map.of("error", ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

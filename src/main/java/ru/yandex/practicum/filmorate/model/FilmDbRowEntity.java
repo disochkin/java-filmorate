@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor // Generates a no-argument constructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@NoArgsConstructor // Generates a no-argument constructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder

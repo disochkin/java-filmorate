@@ -105,12 +105,11 @@ public class JdbcFilmRepository implements FilmStorage {
                 "ON ff.mpa_id = m.ID " +
                 "LEFT JOIN PUBLIC.\"GENRES\" g " +
                 "ON fg.GENRE_ID  = g.ID;";
-        List<Film> films = jdbc.query(query, JdbcFilmRepository::extractFilmData);
-        return films;
+        return jdbc.query(query, JdbcFilmRepository::extractFilmData);
     }
 
     public Collection<Mpa> findAllMpa() {
-        final String query = "SELECT * FROM MPA;";
+        final String query = "SELECT * FROM MPA ORDER BY ID;";
         return jdbc.query(query, JdbcFilmRepository::extractMpaData);
     }
 

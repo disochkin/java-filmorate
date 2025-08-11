@@ -27,10 +27,6 @@ public class UserController {
         return userService.findAll();
     }
 
-//    @RequestMapping(path = "/{userId}", method = RequestMethod.GET)
-//    public User getUserById(@PathVariable long userId) {
-//        return userService.getUserById(userId);
-//    }
 
     @RequestMapping(path = "", method = RequestMethod.POST)
     public User create(@Valid @RequestBody User user) {

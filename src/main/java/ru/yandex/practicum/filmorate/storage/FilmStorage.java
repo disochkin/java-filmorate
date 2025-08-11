@@ -10,12 +10,8 @@ import java.util.Collection;
 public interface FilmStorage {
     Film save(Film film);
 
-    //
     Collection<Film> findAll();
 
     Collection<Mpa> findAllMpa();
-//
-//    Optional<Film> getFilmById(Long filmId);
-//
-//    Film update(Film film);
+
 }

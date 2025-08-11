@@ -1,5 +1,5 @@
 -- Заполнение таблицы рейтингов
-INSERT INTO MPA (ID, NAME) VALUES
+MERGE INTO MPA (ID, NAME) VALUES
     (1,'G'),
     (2,'PG'),
     (3,'PG-13'),
@@ -7,7 +7,7 @@ INSERT INTO MPA (ID, NAME) VALUES
     (5,'NC-17');
 
 -- Заполнение таблицы жанров
-INSERT INTO GENRES (ID,NAME) VALUES
+MERGE INTO GENRES (ID,NAME) VALUES
 	 (1,'Комедия'),
 	 (2,'Драма'),
 	 (3,'Мультфильм'),

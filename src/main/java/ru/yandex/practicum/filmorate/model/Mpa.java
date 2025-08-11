@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@NoArgsConstructor // Generates a no-argument constructor
+@NoArgsConstructor
 @Data
 public class Mpa {
     @Positive()
