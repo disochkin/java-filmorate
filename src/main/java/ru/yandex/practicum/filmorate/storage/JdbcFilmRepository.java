@@ -78,8 +78,6 @@ public class JdbcFilmRepository implements FilmStorage {
     }
 
     public List<Film> getPopularFilms(Integer limit) {
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("limit_count", limit);
         final String query = "SELECT ff.ID, ff.NAME, ff.DESCRIPTION, ff.RELEASE_DATE, ff.DURATION, m.ID as MPA_ID, " +
                 "m.NAME as MPA_NAME, g.ID AS GENRE_ID , g.NAME as GENRE_NAME " +
                 "FROM (SELECT f.ID, COUNT(DISTINCT USER_ID) AS LIKE_COUNT FROM PUBLIC.\"FILM\" f " +
@@ -93,19 +91,9 @@ public class JdbcFilmRepository implements FilmStorage {
                 "ON ff.MPA_ID = m.ID " +
                 "LEFT JOIN PUBLIC.\"GENRES\" g " +
                 "ON fg.GENRE_ID = g.ID;";
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("limit_count", limit);
         return jdbc.query(query, parameters, JdbcFilmRepository::extractFilmData);
-    }
-
-    public List<Film> getByIds(List<Integer> ids) {
-        final String query = "SELECT ff.ID, ff.NAME, ff.DESCRIPTION, ff.RELEASE_DATE, ff.DURATION, m.ID as MPA_ID, " +
-                "m.NAME as MPA_NAME, g.ID AS GENRE_ID , g.NAME as GENRE_NAME FROM PUBLIC.\"FILM\" AS ff " +
-                "LEFT JOIN PUBLIC.\"FILM_GENRE\" fg " +
-                "ON ff.id = fg.film_id " +
-                "LEFT JOIN PUBLIC.\"MPA\" m " +
-                "ON ff.mpa_id = m.ID " +
-                "LEFT JOIN PUBLIC.\"GENRES\" g " +
-                "ON fg.GENRE_ID  = g.ID;";
-        return jdbc.query(query, JdbcFilmRepository::extractFilmData);
     }
 
     public Collection<Mpa> findAllMpa() {
@@ -141,7 +129,7 @@ public class JdbcFilmRepository implements FilmStorage {
         if (result.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(result.iterator().next());
+            return Optional.of(result.getFirst());
         }
     }
 
@@ -201,7 +189,7 @@ public class JdbcFilmRepository implements FilmStorage {
         return film;
     }
 
-    public List<Integer> getLikes(Integer filmId) {
+    public Collection<Integer> getLikes(Integer filmId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("filmId", filmId);
         String query = "SELECT USER_ID FROM PUBLIC.\"LIKES\" WHERE FILM_ID=:filmId";
@@ -220,7 +208,7 @@ public class JdbcFilmRepository implements FilmStorage {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("filmId", filmId)
                 .addValue("userId", userId);
-        jdbc.update("DELETE FROM PUBLIC.FILM_GENRE WHERE FILM_ID=:filmId AND GENRE_ID=:genreId; ", params);
+        jdbc.update("DELETE FROM PUBLIC.\"LIKES\" WHERE FILM_ID=:filmId AND USER_ID=:userId; ", params);
     }
 
 }
