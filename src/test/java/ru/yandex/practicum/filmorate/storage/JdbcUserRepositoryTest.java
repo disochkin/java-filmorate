@@ -37,9 +37,15 @@ class JdbcUserRepositoryTest {
     @BeforeEach
     public void initUsers() {
         String[][] userData = {
-                {"1", "email_1@domain.ru", "testUserLogin1", "testUserName1", "2001-01-01"},
-                {"2", "email_2@domain.ru", "testUserLogin2", "testUserName2", "2002-02-02"},
-                {"3", "email_3@domain.ru", "testUserLogin3", "testUserName3", "2003-03-03"}};
+                {
+                        "1", "email_1@domain.ru", "testUserLogin1", "testUserName1", "2001-01-01"
+                },
+                {
+                        "2", "email_2@domain.ru", "testUserLogin2", "testUserName2", "2002-02-02"
+                },
+                {
+                        "3", "email_3@domain.ru", "testUserLogin3", "testUserName3", "2003-03-03"}
+        };
         for (int i = 0; i < userData.length; i++) {
             userMap.put(i + 1, getTestUser(Integer.parseInt(userData[i][0]), userData[i][1], userData[i][2],
                     userData[i][3], LocalDate.parse(userData[i][4])));
@@ -100,13 +106,13 @@ class JdbcUserRepositoryTest {
     @Test
     @DisplayName("Поиск пользователя по id")
     void getUserByIdTest() {
-        int test_user_id = 1;
-        Optional<User> userOptional = jdbcUserRepository.getUserById(test_user_id);
+        int testUserId = 1;
+        Optional<User> userOptional = jdbcUserRepository.getUserById(testUserId);
         assertThat(userOptional)
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
-                .isEqualTo(userMap.get(test_user_id));
+                .isEqualTo(userMap.get(testUserId));
     }
 
     @Test
