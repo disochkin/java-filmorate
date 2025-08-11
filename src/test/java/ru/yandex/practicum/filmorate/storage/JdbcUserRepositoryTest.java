@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("JdbcUserRepositoryTest")
 class JdbcUserRepositoryTest {
     private final JdbcUserRepository jdbcUserRepository;
-    private HashMap<Integer, User> userMap = new HashMap<>();
+    private final HashMap<Integer, User> userMap = new HashMap<>();
 
 
     static User getTestUser(Integer id, String email, String login, String name, LocalDate birthDay) {
@@ -37,23 +37,23 @@ class JdbcUserRepositoryTest {
     @BeforeEach
     public void initUsers() {
         String[][] userData = {
-                {"1","email_1@domain.ru","testUserLogin1","testUserName1","2001-01-01"},
-                {"2","email_2@domain.ru","testUserLogin2","testUserName2","2002-02-02"},
-                {"3","email_3@domain.ru","testUserLogin3","testUserName3","2003-03-03"}};
-        for(int i = 0; i < userData.length; i++) {
-            userMap.put(i+1, getTestUser(Integer.parseInt(userData[i][0]), userData[i][1], userData[i][2],
+                {"1", "email_1@domain.ru", "testUserLogin1", "testUserName1", "2001-01-01"},
+                {"2", "email_2@domain.ru", "testUserLogin2", "testUserName2", "2002-02-02"},
+                {"3", "email_3@domain.ru", "testUserLogin3", "testUserName3", "2003-03-03"}};
+        for (int i = 0; i < userData.length; i++) {
+            userMap.put(i + 1, getTestUser(Integer.parseInt(userData[i][0]), userData[i][1], userData[i][2],
                     userData[i][3], LocalDate.parse(userData[i][4])));
         }
     }
 
     @Test
     void save() {
-        String[] newUserData = {"5","email_5@domain.ru","testUserLogin5","testUserName5","2005-05-05"};
+        String[] newUserData = {"5", "email_5@domain.ru", "testUserLogin5", "testUserName5", "2005-05-05"};
         User newUser = getTestUser(Integer.parseInt(newUserData[0]), newUserData[1], newUserData[2],
                 newUserData[3], LocalDate.parse(newUserData[4]));
         User savedUser = jdbcUserRepository.save(newUser);
         Optional<User> userFromDbOpt = jdbcUserRepository.getUserById(savedUser.getId());
-                assertThat(userFromDbOpt)
+        assertThat(userFromDbOpt)
                 .isPresent()
                 .get()
                 .usingRecursiveComparison()
@@ -62,7 +62,7 @@ class JdbcUserRepositoryTest {
 
     @Test
     void update() {
-        String[] userDataToUpdate = {"4","email_4@domain.ru","testUserLogin4","testUserName4","2004-04-04"};
+        String[] userDataToUpdate = {"4", "email_4@domain.ru", "testUserLogin4", "testUserName4", "2004-04-04"};
         User userToUpdate = userMap.get(3);
         userToUpdate.setEmail(userDataToUpdate[1]);
         userToUpdate.setLogin(userDataToUpdate[2]);
@@ -113,13 +113,13 @@ class JdbcUserRepositoryTest {
     void addFriend_and_removeFriend() {
         Integer userId = 1;
         Integer friendId = 2;
-        jdbcUserRepository.addFriend(userId,friendId);
-        assertThat( jdbcUserRepository.getFriends(userId))
+        jdbcUserRepository.addFriend(userId, friendId);
+        assertThat(jdbcUserRepository.getFriends(userId))
                 .hasSize(1)
                 .contains(friendId);
 
-        jdbcUserRepository.removeFriendship(userId,friendId);
-        assertThat( jdbcUserRepository.getFriends(userId))
+        jdbcUserRepository.removeFriendship(userId, friendId);
+        assertThat(jdbcUserRepository.getFriends(userId))
                 .hasSize(0);
     }
 }
