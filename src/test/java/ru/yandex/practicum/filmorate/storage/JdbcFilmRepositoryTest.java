@@ -39,9 +39,7 @@ class JdbcFilmRepositoryTest {
 
     @BeforeEach
     public void initFilms() {
-        String[][] filmData = {{"1", "film1", "film description1", "2001-01-01", "10"},
-                                {"2", "film2", "film description2", "2002-02-02", "20"},
-                                {"3", "film3", "film description3", "2003-03-03", "30"}};
+        String[][] filmData = {{"1", "film1", "film description1", "2001-01-01", "10"}, {"2", "film2", "film description2", "2002-02-02", "20"}, {"3", "film3", "film description3", "2003-03-03", "30"}};
         for (int i = 0; i < filmData.length; i++) {
             filmMap.put(i + 1, getTestFilm(Integer.parseInt(filmData[i][0]), filmData[i][1], filmData[i][2],
                     LocalDate.parse(filmData[i][3]), Integer.parseInt(filmData[i][4]), mpa));
