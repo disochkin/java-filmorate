@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(JdbcUserRepository.class)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DisplayName("JdbcUserRepositoryTest")
+@Configuration
 class JdbcUserRepositoryTest {
     private final JdbcUserRepository jdbcUserRepository;
     private final HashMap<Integer, User> userMap = new HashMap<>();

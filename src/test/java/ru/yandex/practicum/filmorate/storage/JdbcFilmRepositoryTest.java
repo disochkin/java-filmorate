@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(JdbcFilmRepository.class)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DisplayName("JdbcUserRepositoryTest")
+@Configuration
 class JdbcFilmRepositoryTest {
     private final JdbcFilmRepository jdbcFilmRepository;
     private final HashMap<Integer, Film> filmMap = new HashMap<>();
@@ -95,7 +97,7 @@ class JdbcFilmRepositoryTest {
     }
 
     @Test
-    void getLikes() {
+    void addAndRemoveLikesTest() {
         Integer userId = 1;
         Integer filmId = 2;
         jdbcFilmRepository.addLike(filmId, userId);
