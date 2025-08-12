@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genres;
+import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
@@ -196,18 +197,18 @@ public class JdbcFilmRepository implements FilmStorage {
         return jdbc.queryForList(query, params, Integer.class);
     }
 
-    public void addLike(Integer filmId, Integer userId) {
+    public void addLike(Like like) {
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("filmId", filmId)
-                .addValue("userId", userId);
+                .addValue("filmId", like.getFilmId())
+                .addValue("userId", like.getUserId());
         jdbc.update("INSERT INTO PUBLIC.\"LIKES\" (FILM_ID, USER_ID) " +
                 "VALUES (:filmId, :userId)", params);
     }
 
-    public void removeLike(Integer filmId, Integer userId) {
+    public void removeLike(Like like) {
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("filmId", filmId)
-                .addValue("userId", userId);
+                .addValue("filmId", like.getFilmId())
+                .addValue("userId", like.getUserId());
         jdbc.update("DELETE FROM PUBLIC.\"LIKES\" WHERE FILM_ID=:filmId AND USER_ID=:userId; ", params);
     }
 

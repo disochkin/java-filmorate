@@ -21,3 +21,4 @@ INSERT INTO PUBLIC.FILM (NAME, DESCRIPTION, RELEASE_DATE, DURATION, MPA_ID)
 Обновление записи фильма в БД:
 UPDATE PUBLIC.FILM SET NAME=:name, DESCRIPTION=:description,
     RELEASE_DATE=:releasedate, DURATION=:duration, MPA_ID=:mpa_id WHERE ID=:id
+

@@ -2,10 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genres;
-import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.JdbcFilmRepository;
 import ru.yandex.practicum.filmorate.storage.JdbcGenreRepository;
 import ru.yandex.practicum.filmorate.storage.JdbcUserRepository;
@@ -85,22 +83,34 @@ public class FilmService {
         return filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + id + " не найден"));
     }
 
-    public String addLike(Integer filmId, Integer userId) {
+    public Like addLike(Integer filmId, Integer userId) {
         Optional<Film> filmOptional = jdbcFilmRepository.getFilmById(filmId);
         filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + filmId + " не найден"));
         Optional<User> userOptional = jdbcUserRepository.getUserById(userId);
         userOptional.orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
-        jdbcFilmRepository.addLike(filmId, userId);
-        return "лайк добавлен";
+        Collection<Integer> existingUserIdLike = jdbcFilmRepository.getLikes(filmId);
+        if (existingUserIdLike.contains(userId)) {
+            throw new ValidationException(String.format("Лайк пользователя id=%s фильму id=%s уже добавлен",
+                    userId, filmId));
+        }
+        Like like = new Like(userId,filmId);
+        jdbcFilmRepository.addLike(like);
+        return like;
     }
 
-    public String removeLike(Integer filmId, Integer userId) {
+    public Like removeLike(Integer filmId, Integer userId) {
         Optional<Film> filmOptional = jdbcFilmRepository.getFilmById(filmId);
         filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + filmId + " не найден"));
         Optional<User> userOptional = jdbcUserRepository.getUserById(userId);
         userOptional.orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
-        jdbcFilmRepository.removeLike(filmId, userId);
-        return "лайк удален";
+        Collection<Integer> existingUserIdLike = jdbcFilmRepository.getLikes(filmId);
+        if (!existingUserIdLike.contains(userId)) {
+            throw new ValidationException(String.format("Пользователь id=%s фильму id=%s лайк не ставил",
+                    userId, filmId));
+        }
+        Like like = new Like(userId,filmId);
+        jdbcFilmRepository.removeLike(like);
+        return like;
     }
 }
 

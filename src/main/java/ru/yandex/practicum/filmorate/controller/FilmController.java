@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import java.util.Collection;
@@ -56,12 +57,12 @@ public class FilmController {
     }
 
     @RequestMapping(value = "/{filmId}/like/{userId}", method = RequestMethod.PUT)
-    public String addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+    public Like addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
         return filmService.addLike(filmId, userId);
     }
 
     @RequestMapping(value = "/{filmId}/like/{userId}", method = RequestMethod.DELETE)
-    public String removeLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
+    public Like removeLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
         return filmService.removeLike(filmId, userId);
     }
 
