@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -17,12 +18,11 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Disabled
 @SpringBootTest
-@Import(JdbcUserRepository.class)
+@AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Import(JdbcUserRepository.class)
 @DisplayName("JdbcUserRepositoryTest")
-@Configuration
 class JdbcUserRepositoryTest {
     private final JdbcUserRepository jdbcUserRepository;
     private final HashMap<Integer, User> userMap = new HashMap<>();
