@@ -15,9 +15,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Component("UserJdbcRepository")
-public class JdbcUserRepository {
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+
+public class JdbcUserRepository implements UserRepository {
     private final NamedParameterJdbcOperations jdbc;
 
     static List<User> extractUserData(ResultSet rs) throws SQLException {
@@ -118,7 +119,7 @@ public class JdbcUserRepository {
         return jdbc.queryForList(query, parameters, Integer.class);
     }
 
-    public void removeFriendship(Integer userId, Integer friendId) {
+    public void removeFriend(Integer userId, Integer friendId) {
         String query = "DELETE FROM PUBLIC.\"FRIENDSHIP\" f " +
                 "WHERE (f.USER_ID = :userId AND f.FRIEND_ID = :friendId);";
         MapSqlParameterSource parameters = new MapSqlParameterSource();

@@ -13,9 +13,7 @@ import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Import(JdbcFilmRepository.class)
-@DisplayName("JdbcUserRepositoryTest")
+@DisplayName("JdbcFilmRepositoryTest")
 class JdbcFilmRepositoryTest {
     private final JdbcFilmRepository jdbcFilmRepository;
     private final HashMap<Integer, Film> filmMap = new HashMap<>();
@@ -51,7 +49,7 @@ class JdbcFilmRepositoryTest {
 
     @Test
     void findAll() {
-        List<Film> actualFilms = jdbcFilmRepository.findAll();
+        Collection<Film> actualFilms = jdbcFilmRepository.findAll();
         assertThat(actualFilms).containsExactlyInAnyOrderElementsOf(filmMap.values());
     }
 
@@ -109,4 +107,34 @@ class JdbcFilmRepositoryTest {
         jdbcFilmRepository.removeLike(like);
         assertThat(jdbcFilmRepository.getLikes(filmId)).hasSize(0);
     }
+
+    @Test
+    void getPopularFilmTest() {
+        //Проверка
+        assertThat(jdbcFilmRepository.getPopularFilms(10))
+                .hasSize(0);
+        // 3 лайка фильму с id=1
+        jdbcFilmRepository.addLike(new Like(1,1));
+        jdbcFilmRepository.addLike(new Like(2,1));
+        jdbcFilmRepository.addLike(new Like(3,1));
+        // 2 лайка фильму с id=3
+        jdbcFilmRepository.addLike(new Like(1,3));
+        jdbcFilmRepository.addLike(new Like(3,3));
+        // 1 лайк фильму с id=2
+        jdbcFilmRepository.addLike(new Like(1,2));
+        List<Film> expectedTopList = List.of(filmMap.get(1), filmMap.get(3), filmMap.get(2));
+
+        assertThat(jdbcFilmRepository.getPopularFilms(10))
+                .hasSize(3)
+                .containsExactlyElementsOf(expectedTopList);
+
+        assertThat(jdbcFilmRepository.getPopularFilms(2))
+                .hasSize(2)
+                .containsExactlyElementsOf(expectedTopList.subList(0,2));
+
+
+
+    }
+
+
 }

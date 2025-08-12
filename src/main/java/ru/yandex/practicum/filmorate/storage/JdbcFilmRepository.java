@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,10 +20,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Repository
-@RequiredArgsConstructor
 @Component("JdbcFilmRepository")
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 
-public class JdbcFilmRepository implements FilmStorage {
+public class JdbcFilmRepository implements FilmRepository {
     private final NamedParameterJdbcOperations jdbc;
     private final RowMapper<Mpa> mpaMapper;
 

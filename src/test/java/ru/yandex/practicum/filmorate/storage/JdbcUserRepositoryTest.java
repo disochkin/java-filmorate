@@ -25,7 +25,6 @@ class JdbcUserRepositoryTest {
     private final JdbcUserRepository jdbcUserRepository;
     private final HashMap<Integer, User> userMap = new HashMap<>();
 
-
     static User getTestUser(Integer id, String email, String login, String name, LocalDate birthDay) {
         User user = new User();
         user.setId(id);
@@ -116,7 +115,7 @@ class JdbcUserRepositoryTest {
                 .hasSize(1)
                 .contains(friendId);
 
-        jdbcUserRepository.removeFriendship(userId, friendId);
+        jdbcUserRepository.removeFriend(userId, friendId);
         assertThat(jdbcUserRepository.getFriends(userId))
                 .hasSize(0);
     }
