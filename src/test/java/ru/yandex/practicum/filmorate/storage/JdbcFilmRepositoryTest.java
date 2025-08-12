@@ -40,7 +40,7 @@ class JdbcFilmRepositoryTest {
 
     @BeforeEach
     public void initFilms() {
-        String[][] filmData = {{"1", "film1", "film description1", "2001-01-01", "10"}, {"2", "film2", "film description2", "2002-02-02", "20"}, {"3", "film3", "film description3", "2003-03-03", "30"}};
+        String[][] filmData = {{"1", "film1", "film description1", "2001-01-01", "10"}, {"2", "film2", "film description2", "2002-02-02", "20"}, {"3", "film3", "film description3", "2003-03-03", "30"}, {"4", "film4", "film description4", "2004-04-04", "40"}};
         for (int i = 0; i < filmData.length; i++) {
             filmMap.put(i + 1, getTestFilm(Integer.parseInt(filmData[i][0]), filmData[i][1], filmData[i][2],
                     LocalDate.parse(filmData[i][3]), Integer.parseInt(filmData[i][4]), mpa));
@@ -78,22 +78,6 @@ class JdbcFilmRepositoryTest {
                 .isEqualTo(newFilm);
     }
 
-    @Test
-    void update() {
-        String[] filmDataToUpdate = {"5", "film5", "film description5", "2005-05-05", "50"};
-        Film filmToUpdate = filmMap.get(3);
-        filmToUpdate.setName(filmDataToUpdate[1]);
-        filmToUpdate.setDescription(filmDataToUpdate[2]);
-        filmToUpdate.setReleaseDate(LocalDate.parse(filmDataToUpdate[3]));
-        filmToUpdate.setDuration(Integer.parseInt(filmDataToUpdate[4]));
-        jdbcFilmRepository.update(filmToUpdate);
-        Optional<Film> updatedFilm = jdbcFilmRepository.getFilmById(filmToUpdate.getId());
-        assertThat(updatedFilm)
-                .isPresent()
-                .get()
-                .usingRecursiveComparison()
-                .isEqualTo(filmToUpdate);
-    }
 
     @Test
     void addAndRemoveLikesTest() {
@@ -131,10 +115,22 @@ class JdbcFilmRepositoryTest {
         assertThat(jdbcFilmRepository.getPopularFilms(2))
                 .hasSize(2)
                 .containsExactlyElementsOf(expectedTopList.subList(0,2));
-
-
-
     }
 
-
+    @Test
+    void update() {
+        String[] filmDataToUpdate = {"5", "film5", "film description5", "2005-05-05", "50"};
+        Film filmToUpdate = filmMap.get(4);
+        filmToUpdate.setName(filmDataToUpdate[1]);
+        filmToUpdate.setDescription(filmDataToUpdate[2]);
+        filmToUpdate.setReleaseDate(LocalDate.parse(filmDataToUpdate[3]));
+        filmToUpdate.setDuration(Integer.parseInt(filmDataToUpdate[4]));
+        jdbcFilmRepository.update(filmToUpdate);
+        Optional<Film> updatedFilm = jdbcFilmRepository.getFilmById(filmToUpdate.getId());
+        assertThat(updatedFilm)
+                .isPresent()
+                .get()
+                .usingRecursiveComparison()
+                .isEqualTo(filmToUpdate);
+    }
 }
