@@ -69,7 +69,6 @@ public class JdbcUserRepository {
     }
 
     public Collection<User> findAll() {
-        //String query = "SELECT * FROM PUBLIC.\"USERS\" ORDER BY ID;";
         String query = "SELECT USERS.ID,USERS.EMAIL, USERS.LOGIN, USERS.NAME, USERS.BIRTHDAY, f.FRIEND_ID " +
                 "FROM PUBLIC.\"USERS\" " +
                 "LEFT JOIN PUBLIC.FRIENDSHIP f " +
@@ -88,7 +87,6 @@ public class JdbcUserRepository {
     }
 
     public Optional<User> getUserById(Integer id) {
-        //String query = "SELECT * FROM PUBLIC.\"USERS\" WHERE ID=:id";
         String query = "SELECT user_selected.Id,user_selected.email, user_selected.login, user_selected.name, user_selected.Birthday, f.FRIEND_ID " +
                 "FROM (SELECT * FROM  PUBLIC.USERS u WHERE id=:id) AS user_selected " +
                 "LEFT JOIN PUBLIC.FRIENDSHIP f " +
@@ -99,7 +97,7 @@ public class JdbcUserRepository {
         if (result.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(result.iterator().next());
+            return Optional.of(result.getFirst());
         }
     }
 
