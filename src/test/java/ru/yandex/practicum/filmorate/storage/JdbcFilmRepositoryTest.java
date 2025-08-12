@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Like;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
@@ -100,11 +101,12 @@ class JdbcFilmRepositoryTest {
     void addAndRemoveLikesTest() {
         Integer userId = 1;
         Integer filmId = 2;
-        jdbcFilmRepository.addLike(filmId, userId);
+        Like like = new Like(userId, filmId);
+        jdbcFilmRepository.addLike(like);
         assertThat(jdbcFilmRepository.getLikes(filmId))
                 .hasSize(1)
                 .contains(userId);
-        jdbcFilmRepository.removeLike(filmId, userId);
+        jdbcFilmRepository.removeLike(like);
         assertThat(jdbcFilmRepository.getLikes(filmId)).hasSize(0);
     }
 }
