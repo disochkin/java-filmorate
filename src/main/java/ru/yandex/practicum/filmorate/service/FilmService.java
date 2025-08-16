@@ -1,81 +1,115 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.*;
+import ru.yandex.practicum.filmorate.storage.FilmRepository;
+import ru.yandex.practicum.filmorate.storage.GenreRepository;
+import ru.yandex.practicum.filmorate.storage.UserRepository;
 
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmService {
-    private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
-
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-    }
+    private final FilmRepository filmRepository;
+    private final GenreRepository genreRepository;
+    private final UserRepository userRepository;
 
     public Film create(Film film) {
-        return filmStorage.create(film);
-    }
-
-    public Collection<Film> findAll() {
-        return filmStorage.findAll();
-    }
-
-    public Collection<Film> getPopularFilm(Integer count) {
-        return filmStorage.findAll().stream()
-                .sorted(Comparator.comparingInt(film -> film.getLikes().size())).limit(count)
-                .toList().reversed();
-    }
-
-    public Film getFilmById(Long filmId) {
-        Film film = filmStorage.getFilmById(filmId);
-        if (film == null) {
-            throw new NoSuchElementException("Фильм с ID=" + filmId + " не найден");
+        final List<Integer> genreIds = film.getGenres().stream().map(Genres::getId).toList();
+        final Collection<Genres> genres = genreRepository.getGenresByIds(genreIds);
+        if (genreIds.size() != genres.size()) {
+            throw new NoSuchElementException("Жанры не найдены");
         }
+        final Optional<Mpa> mpaOptional = filmRepository.getMpaById(film.getMpa().getId());
+        if (mpaOptional.isEmpty()) {
+            throw new NoSuchElementException("Рейтинг MPA с ID=" + film.getMpa().getId() + " не найден");
+        }
+        filmRepository.save(film);
         return film;
     }
 
     public Film update(Film film) {
-        Film filmInStorage = filmStorage.getFilmById(film.getId());
-        if (filmInStorage == null) {
-            throw new NoSuchElementException("Фильм с ID=" + film.getId() + " не найден");
+        Film filmInStorage = getFilmById(film.getId());
+        final List<Integer> genreIds = film.getGenres().stream().map(Genres::getId).toList();
+        final Collection<Genres> genres = genreRepository.getGenresByIds(genreIds);
+
+        if (genreIds.size() != genres.size()) {
+            throw new NoSuchElementException("Жанры не найдены");
         }
-        return filmStorage.update(film);
+
+        final Optional<Mpa> mpaOptional = filmRepository.getMpaById(film.getMpa().getId());
+        if (mpaOptional.isEmpty()) {
+            throw new NoSuchElementException("Рейтинг MPA с ID=" + film.getMpa().getId() + " не найден");
+        }
+
+        filmInStorage.setName(film.getName());
+        filmInStorage.setDescription(film.getDescription());
+        filmInStorage.setReleaseDate(film.getReleaseDate());
+        filmInStorage.setDuration(film.getDuration());
+        filmInStorage.setMpa(film.getMpa());
+        filmInStorage.setGenres(film.getGenres());
+
+        filmRepository.update(film);
+        return getFilmById(film.getId());
     }
 
-    public Film addLike(Long id, Long userId) {
-        Film film = filmStorage.getFilmById(id);
-        if (film == null) {
-            throw new NoSuchElementException("Фильм с ID=" + id + " не найден");
-        }
-        User user = userStorage.getUserById(userId);
-        if (user == null) {
-            throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
-        }
-        film.getLikes().add(userId);
-        filmStorage.update(film);
-        return film;
+    public Collection<Film> findAll() {
+        return filmRepository.findAll();
     }
 
-    public Film removeLike(Long id, Long userId) {
-        Film film = filmStorage.getFilmById(id);
-        if (film == null) {
-            throw new NoSuchElementException("Фильм с ID=" + id + " не найден");
-        }
+    public Collection<Mpa> findAllMpa() {
+        return filmRepository.findAllMpa();
+    }
 
-        User user = userStorage.getUserById(userId);
-        if (user == null) {
-            throw new NoSuchElementException("Пользователь с ID=" + userId + " не найден");
+    public Mpa getMpaById(Integer mpaId) {
+        Optional<Mpa> mpaOptional = filmRepository.getMpaById(mpaId);
+        return mpaOptional.orElseThrow(() -> new NoSuchElementException("Рейтинг с ID=" + mpaId + " не найден"));
+    }
+
+    public Collection<Film> getPopularFilm(Integer count) {
+        return filmRepository.getPopularFilms(count);
+    }
+
+    public Film getFilmById(Integer id) {
+        final Optional<Film> filmOptional = filmRepository.getFilmById(id);
+        return filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + id + " не найден"));
+    }
+
+    public Like addLike(Integer filmId, Integer userId) {
+        Optional<Film> filmOptional = filmRepository.getFilmById(filmId);
+        filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + filmId + " не найден"));
+        Optional<User> userOptional = userRepository.getUserById(userId);
+        userOptional.orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
+        Collection<Integer> existingUserIdLike = filmRepository.getLikes(filmId);
+        if (existingUserIdLike.contains(userId)) {
+            throw new ValidationException(String.format("Лайк пользователя id=%s фильму id=%s уже добавлен",
+                    userId, filmId));
         }
-        film.getLikes().remove(userId);
-        filmStorage.update(film);
-        return film;
+        Like like = new Like(userId,filmId);
+        filmRepository.addLike(like);
+        return like;
+    }
+
+    public Like removeLike(Integer filmId, Integer userId) {
+        Optional<Film> filmOptional = filmRepository.getFilmById(filmId);
+        filmOptional.orElseThrow(() -> new NoSuchElementException("Фильм с ID=" + filmId + " не найден"));
+        Optional<User> userOptional = userRepository.getUserById(userId);
+        userOptional.orElseThrow(() -> new NoSuchElementException("Пользователь с ID=" + userId + " не найден"));
+        Collection<Integer> existingUserIdLike = filmRepository.getLikes(filmId);
+        if (!existingUserIdLike.contains(userId)) {
+            throw new ValidationException(String.format("Пользователь id=%s фильму id=%s лайк не ставил",
+                    userId, filmId));
+        }
+        Like like = new Like(userId,filmId);
+        filmRepository.removeLike(like);
+        return like;
     }
 }
+
